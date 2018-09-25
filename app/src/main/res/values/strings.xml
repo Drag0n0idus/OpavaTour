@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidAR</string>
+    <string name="edit_message">Enter the message</string>
+    <string name="button_send">Send</string>
+</resources>
