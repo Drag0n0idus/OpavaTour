@@ -10,6 +10,7 @@
 - *Administrátorský přístup pro úpravu a přidání stezek*
 - *Propojení s administrátorským webovým serverem*
 - *AR funkčnost*
+- *Zveřejnění na Google Play*
 ## Zdroje 
 - Google (https://www.google.cz/)
 - Android Developers (https://developer.android.com/)
