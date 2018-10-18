@@ -12,8 +12,8 @@
 - *AR funkčnost*
 - *Zveřejnění na Google Play*
 ## Zdroje 
-- Google (https://www.google.cz/)
-- Android Developers (https://developer.android.com/)
-- Mgr. Marek Lučný (http://lucny.sspu-opava.cz/)
+- [Google](https://www.google.cz/)
+- [Android Developers](https://developer.android.com/)
+- [Mgr. Marek Lučný](http://lucny.sspu-opava.cz/)
 ### Konzultující učitel
 **_Mgr. Marek Lučný_**
