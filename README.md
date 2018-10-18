@@ -1,4 +1,4 @@
-# Android-Project
+# Stezka po Opavě
 ## Cíle práce
 > **Výrazný text jsou cíle práce**, 
 > *kurzívou jsou možné cíle práce*
