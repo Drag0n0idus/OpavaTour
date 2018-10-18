@@ -13,3 +13,5 @@
 ## Zdroje 
 - Google (https://www.google.cz/)
 - Android Developers (https://developer.android.com/)
+### Konzultující učitel
+- **_Mgr. Marek Lučný_**
