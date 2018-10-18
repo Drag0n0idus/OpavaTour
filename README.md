@@ -1,7 +1,7 @@
 # Android-Project
 ## Cíle práce
 > **Výrazný text jsou cíle práce**, 
-> *Kurzívou jsou možné cíle práce*
+> *kurzívou jsou možné cíle práce*
 - **Aplikace pro naučnou stezku po Opavě**
 - **Zobrazení stezky na mapě**
 - **Práce s QR kódy**
