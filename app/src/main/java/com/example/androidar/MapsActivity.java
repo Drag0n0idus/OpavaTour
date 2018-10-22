@@ -54,6 +54,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng hlaska = new LatLng(49.938849, 17.902541);
         mMap.addMarker(new MarkerOptions().position(hlaska).title("Hláska"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(hlaska));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(18.0f));
+        mMap.setMinZoomPreference(18.0f);
+        mMap.setMaxZoomPreference(18.0f);
     }
 }
