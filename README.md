@@ -1,8 +1,8 @@
-# Stezka po Opavě
+# Opava Tour
 ## Cíle práce
 > **Výrazný text jsou cíle práce**, 
 > *kurzívou jsou možné cíle práce*
-- **Aplikace pro naučnou stezku po Opavě**
+- **Aplikace pro stezky po Opavě (např. kostely, kavárny, parky, atp.)**
 - **Zobrazení stezky na mapě**
 - **Práce s QR kódy**
 - **Propojení s databází**
