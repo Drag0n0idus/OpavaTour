@@ -52,9 +52,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Add a marker in Sydney, Australia, and move the camera.
         LatLng hlaska = new LatLng(49.938849, 17.902541);
+        LatLng slezskeDivadlo = new LatLng(49.939067, 17.90118899999993);
+        LatLng kostelMarie = new LatLng(49.9386939, 17.900636599999984);
+        LatLng obecniDum = new LatLng(49.93627182024, 17.90123462677002);
         mMap.addMarker(new MarkerOptions().position(hlaska).title("Hláska"));
+        mMap.addMarker(new MarkerOptions().position(slezskeDivadlo).title("Slezské Divadlo"));
+        mMap.addMarker(new MarkerOptions().position(kostelMarie).title("Konkatedrála Nanebevzetí Panny Marie"));
+        mMap.addMarker(new MarkerOptions().position(obecniDum).title("Obecní Dům"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(hlaska));
-        mMap.setMinZoomPreference(18.0f);
+        mMap.setMinZoomPreference(15.0f);
         mMap.setMaxZoomPreference(18.0f);
     }
 }
