@@ -7,4 +7,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="button_maps">Maps</string>
+    <string name="button_navigation">Show route</string>
+    <string name="button_takePic">Take picture</string>
+    <string name="button_scan">Scan Code</string>
+    <string name="dialog_connect">This application requires an Internet connection at all times.</string>
+    <string name="dialog_cancel">cancel</string>
+    <string name="dialog_confirm">OK</string>
 </resources>

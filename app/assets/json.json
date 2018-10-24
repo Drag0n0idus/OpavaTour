@@ -1,0 +1,569 @@
+{
+   "geocoded_waypoints" : [
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJUzhKEBPYE0cRuztGtxmJoF8",
+         "types" : [ "street_address" ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJS9R_qBPYE0cRhHoCDCFkoEQ",
+         "types" : [ "establishment", "point_of_interest" ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJbzn6mxPYE0cRH7cH1dNPINQ",
+         "types" : [ "street_address" ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJ9-hCkRTYE0cRXdgUKRFRaKQ",
+         "types" : [ "street_address" ]
+      }
+   ],
+   "routes" : [
+      {
+         "bounds" : {
+            "northeast" : {
+               "lat" : 49.9402643,
+               "lng" : 17.9071985
+            },
+            "southwest" : {
+               "lat" : 49.9345808,
+               "lng" : 17.8982742
+            }
+         },
+         "copyrights" : "Data map ©2018 Google",
+         "legs" : [
+            {
+               "distance" : {
+                  "text" : "1,8 km",
+                  "value" : 1827
+               },
+               "duration" : {
+                  "text" : "6 min",
+                  "value" : 346
+               },
+               "end_address" : "Horní nám. 21, 746 01 Opava, Česko",
+               "end_location" : {
+                  "lat" : 49.9392424,
+                  "lng" : 17.9012646
+               },
+               "start_address" : "Horní nám. 382/69, Město, 746 01 Opava, Česko",
+               "start_location" : {
+                  "lat" : 49.9390757,
+                  "lng" : 17.9026072
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "55 m",
+                        "value" : 55
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 10
+                     },
+                     "end_location" : {
+                        "lat" : 49.939014,
+                        "lng" : 17.9033676
+                     },
+                     "html_instructions" : "Jeďte na \u003cb\u003evýchod\u003c/b\u003e po \u003cb\u003eHorní nám.\u003c/b\u003e směrem na \u003cb\u003eMezi Trhy\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "gvxoHirglBDc@B]Be@?Y?U"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9390757,
+                        "lng" : 17.9026072
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 110
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 20
+                     },
+                     "end_location" : {
+                        "lat" : 49.9394508,
+                        "lng" : 17.9047349
+                     },
+                     "html_instructions" : "\u003cb\u003eHorní nám.\u003c/b\u003e se stáčí mírně \u003cb\u003edoleva\u003c/b\u003e a přechází v \u003cb\u003eMezi Trhy\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "yuxoHawglBESIa@q@yBEQCQEOCSAK?K"
+                     },
+                     "start_location" : {
+                        "lat" : 49.939014,
+                        "lng" : 17.9033676
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "78 m",
+                        "value" : 78
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 16
+                     },
+                     "end_location" : {
+                        "lat" : 49.9391223,
+                        "lng" : 17.9056879
+                     },
+                     "html_instructions" : "\u003cb\u003eMezi Trhy\u003c/b\u003e se stáčí mírně \u003cb\u003edoprava\u003c/b\u003e a přechází v \u003cb\u003eDolní nám.\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "qxxoHq_hlB?I@G?I@GBODOBQZ{@HUHW"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9394508,
+                        "lng" : 17.9047349
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 142
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 36
+                     },
+                     "end_location" : {
+                        "lat" : 49.93829849999999,
+                        "lng" : 17.9071985
+                     },
+                     "html_instructions" : "Pokračujte po \u003cb\u003eSněmovní\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "ovxoHqehlBZ{@L[Zq@Zq@Pa@n@oA"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9391223,
+                        "lng" : 17.9056879
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,3 km",
+                        "value" : 320
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 55
+                     },
+                     "end_location" : {
+                        "lat" : 49.9356802,
+                        "lng" : 17.9057158
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoprava\u003c/b\u003e na \u003cb\u003ePraskova\u003c/b\u003e/\u003cb\u003esilnici 46\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "kqxoH_ohlBfAfAPNn@p@\\\\n@l@^XHFZPXNVND@B?J@D?P@R?f@Bd@?LABAD?RG"
+                     },
+                     "start_location" : {
+                        "lat" : 49.93829849999999,
+                        "lng" : 17.9071985
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,9 km",
+                        "value" : 867
+                     },
+                     "duration" : {
+                        "text" : "2 min",
+                        "value" : 106
+                     },
+                     "end_location" : {
+                        "lat" : 49.93903359999999,
+                        "lng" : 17.8983534
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoprava\u003c/b\u003e na \u003cb\u003eNádražní okruh\u003c/b\u003e/\u003cb\u003esilnici 11\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePokračujte po silnici 11\u003c/div\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "_axoHwehlBBHFPFLLXXx@Xt@Rd@LTHHr@pA^t@@F@F@HAb@?HAFAHAHCHCJIVK`@A@s@rBUl@Sd@g@pAi@xAKXIVO`@Yp@_AfB]f@i@p@m@j@yAxAe@`@KJIFKFKFKDKBKBG@G@I?G?O?WAoCM"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9356802,
+                        "lng" : 17.9057158
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 122
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 27
+                     },
+                     "end_location" : {
+                        "lat" : 49.9390599,
+                        "lng" : 17.9000574
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoprava\u003c/b\u003e na \u003cb\u003eČapkova\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "}uxoHuwflB?_BEuF"
+                     },
+                     "start_location" : {
+                        "lat" : 49.93903359999999,
+                        "lng" : 17.8983534
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "51 m",
+                        "value" : 51
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 40
+                     },
+                     "end_location" : {
+                        "lat" : 49.9394947,
+                        "lng" : 17.9001924
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoleva\u003c/b\u003e na \u003cb\u003eRybí trh\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "cvxoHkbglBWDK?ICGCMGECECEG"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9390599,
+                        "lng" : 17.9000574
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "82 m",
+                        "value" : 82
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 36
+                     },
+                     "end_location" : {
+                        "lat" : 49.9392424,
+                        "lng" : 17.9012646
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoprava\u003c/b\u003e na \u003cb\u003eU Jaktařské brány\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eCíl bude vpravo\u003c/div\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "yxxoHecglBHYJe@Hm@JcADc@"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9394947,
+                        "lng" : 17.9001924
+                     },
+                     "travel_mode" : "DRIVING"
+                  }
+               ],
+               "traffic_speed_entry" : [],
+               "via_waypoint" : []
+            },
+            {
+               "distance" : {
+                  "text" : "0,7 km",
+                  "value" : 709
+               },
+               "duration" : {
+                  "text" : "3 min",
+                  "value" : 179
+               },
+               "end_address" : "Rybí trh 185/16, Město, 746 01 Opava, Česko",
+               "end_location" : {
+                  "lat" : 49.9385185,
+                  "lng" : 17.9006186
+               },
+               "start_address" : "Horní nám. 21, 746 01 Opava, Česko",
+               "start_location" : {
+                  "lat" : 49.9392424,
+                  "lng" : 17.9012646
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 137
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 48
+                     },
+                     "end_location" : {
+                        "lat" : 49.9397989,
+                        "lng" : 17.8996011
+                     },
+                     "html_instructions" : "Jeďte na \u003cb\u003ezápad\u003c/b\u003e po \u003cb\u003eU Jaktařské brány\u003c/b\u003e směrem na \u003cb\u003eRybí trh\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "gwxoH{iglBEb@KbAIl@Kd@IXM\\o@vA"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9392424,
+                        "lng" : 17.9012646
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 99
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 27
+                     },
+                     "end_location" : {
+                        "lat" : 49.9402643,
+                        "lng" : 17.8984305
+                     },
+                     "html_instructions" : "Pokračujte po \u003cb\u003enám. Republiky\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "wzxoHo_glBM^M^IT]~@WrA"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9397989,
+                        "lng" : 17.8996011
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 137
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 20
+                     },
+                     "end_location" : {
+                        "lat" : 49.93903359999999,
+                        "lng" : 17.8983534
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoleva\u003c/b\u003e na \u003cb\u003enám. Republiky\u003c/b\u003e/\u003cb\u003esilnici 11\u003c/b\u003e/\u003cb\u003esilnici 57\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePokračujte po silnici 11/silnici 57\u003c/div\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "s}xoHexflBbAAt@DH?lAFb@B"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9402643,
+                        "lng" : 17.8984305
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 122
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 27
+                     },
+                     "end_location" : {
+                        "lat" : 49.9390599,
+                        "lng" : 17.9000574
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoleva\u003c/b\u003e na \u003cb\u003eČapkova\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "}uxoHuwflB?_BEuF"
+                     },
+                     "start_location" : {
+                        "lat" : 49.93903359999999,
+                        "lng" : 17.8983534
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 124
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 34
+                     },
+                     "end_location" : {
+                        "lat" : 49.9380415,
+                        "lng" : 17.9005617
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoprava\u003c/b\u003e na \u003cb\u003eRybí trh\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "cvxoHkbglBJAn@Ih@M^CNENGHELMDI@EDS"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9390599,
+                        "lng" : 17.9000574
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "90 m",
+                        "value" : 90
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 23
+                     },
+                     "end_location" : {
+                        "lat" : 49.9385185,
+                        "lng" : 17.9006186
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoleva\u003c/b\u003e a zůstaňte na \u003cb\u003eRybí trh\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eCíl bude vpravo\u003c/div\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "woxoHoeglBCCUMOQSU_@a@?r@AZ"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9380415,
+                        "lng" : 17.9005617
+                     },
+                     "travel_mode" : "DRIVING"
+                  }
+               ],
+               "traffic_speed_entry" : [],
+               "via_waypoint" : []
+            },
+            {
+               "distance" : {
+                  "text" : "0,3 km",
+                  "value" : 349
+               },
+               "duration" : {
+                  "text" : "1 min.",
+                  "value" : 75
+               },
+               "end_address" : "Ostrožná 236/46, Město, 746 01 Opava, Česko",
+               "end_location" : {
+                  "lat" : 49.9363791,
+                  "lng" : 17.9013493
+               },
+               "start_address" : "Rybí trh 185/16, Město, 746 01 Opava, Česko",
+               "start_location" : {
+                  "lat" : 49.9385185,
+                  "lng" : 17.9006186
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "31 m",
+                        "value" : 31
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 5
+                     },
+                     "end_location" : {
+                        "lat" : 49.93855019999999,
+                        "lng" : 17.9001909
+                     },
+                     "html_instructions" : "Jeďte na \u003cb\u003ezápad\u003c/b\u003e po \u003cb\u003eRybí trh\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "wrxoH{eglB?VE|@"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9385185,
+                        "lng" : 17.9006186
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "67 m",
+                        "value" : 67
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 20
+                     },
+                     "end_location" : {
+                        "lat" : 49.9380415,
+                        "lng" : 17.9005617
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoleva\u003c/b\u003e a zůstaňte na \u003cb\u003eRybí trh\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "}rxoHecglB^CNENGHELMDI@EDS"
+                     },
+                     "start_location" : {
+                        "lat" : 49.93855019999999,
+                        "lng" : 17.9001909
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 117
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 24
+                     },
+                     "end_location" : {
+                        "lat" : 49.9370989,
+                        "lng" : 17.8998441
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoprava\u003c/b\u003e na \u003cb\u003eMatiční\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "woxoHoeglBf@VrCvB"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9380415,
+                        "lng" : 17.9005617
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0,1 km",
+                        "value" : 134
+                     },
+                     "duration" : {
+                        "text" : "1 min.",
+                        "value" : 26
+                     },
+                     "end_location" : {
+                        "lat" : 49.9363791,
+                        "lng" : 17.9013493
+                     },
+                     "html_instructions" : "Odbočte \u003cb\u003edoleva\u003c/b\u003e na \u003cb\u003eBeethovenova\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eCíl bude vpravo\u003c/div\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "{ixoH_aglBx@uBt@mBPg@La@"
+                     },
+                     "start_location" : {
+                        "lat" : 49.9370989,
+                        "lng" : 17.8998441
+                     },
+                     "travel_mode" : "DRIVING"
+                  }
+               ],
+               "traffic_speed_entry" : [],
+               "via_waypoint" : []
+            }
+         ],
+         "overview_polyline" : {
+            "points" : "gvxoHirglBLaCEi@{@{CSgA?i@Jq@r@{Bh@wAv@cB`AqBxAvAlAnAnAfAvAx@ZBrBDj@K`@bAr@nB`@z@HHr@pA`@|@BPAl@Id@[fAiA`D{@vBoAlDyAxCgAxAyDrDm@\\g@Jy@AoCM?_BEuFWDUCUKKGEGHYTsAPgBQfBUrAWv@}@vBWt@]~@WrAbAAt@DvAFb@B?_BEuFJAxAWn@IXMLMDIFYYQc@g@_@a@?r@Ar@E|@^C^MVSFODSf@VrCvBx@uBfAuCLa@"
+         },
+         "summary" : "silnici 11",
+         "warnings" : [],
+         "waypoint_order" : [ 0, 1 ]
+      }
+   ],
+   "status" : "OK"
+}
