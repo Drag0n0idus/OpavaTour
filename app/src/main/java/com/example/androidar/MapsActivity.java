@@ -37,17 +37,29 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
+
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    LatLng hlaska = new LatLng(49.938849, 17.902541);;
-    LatLng slezskeDivadlo = new LatLng(49.939067, 17.90118899999993);;
-    LatLng kostelMarie = new LatLng(49.9386939, 17.900636599999984);;
-    LatLng obecniDum = new LatLng(49.93627182024, 17.90123462677002);
+    LatLng hlaska = new LatLng(49.938887, 17.902368);
+    LatLng slezskeDivadlo = new LatLng(49.938963, 17.901628);
+    LatLng kostelMarie = new LatLng(49.938773, 17.900169);
+    LatLng obecniDum = new LatLng(49.936215, 17.901329);
+    DirectionsResult result;
+    DateTime now;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +76,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        //Přidá markery na daných koordinátech
+        now = new DateTime();
+        try {
+            result = DirectionsApi.newRequest(getGeoContext())
+                    .mode(TravelMode.WALKING).origin("49.938887, 17.902368").destination("49.938963, 17.901628").departureTime(now).await();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        addMarkersToMap(result, mMap);
+        addPolyline(result, mMap);
+
+        /*Přidá markery na daných koordinátech
         mMap.addMarker(new MarkerOptions().position(hlaska).title("Hláska"));
         mMap.addMarker(new MarkerOptions().position(slezskeDivadlo).title("Slezské Divadlo"));
         mMap.addMarker(new MarkerOptions().position(kostelMarie).title("Konkatedrála Nanebevzetí Panny Marie"));
         mMap.addMarker(new MarkerOptions().position(obecniDum).title("Obecní Dům"));
-        //Posune kameru na určený bod
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(hlaska));
-        //Nastavení min a max přiblížení
-        mMap.setMinZoomPreference(15.0f);
-        mMap.setMaxZoomPreference(18.0f);
+
+
 
         //Vytvoří spojnici mezi markery
         Polyline polyline = mMap.addPolyline(new PolylineOptions()
@@ -81,11 +105,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .add(
                         hlaska,
                         slezskeDivadlo,
+                        sDtokM1,
+                        sDtokM2,
                         kostelMarie,
-                        obecniDum));
+                        kMtooD1,
+                        kMtooD2,
+                        kMtooD3,
+                        kMtooD4,
+                        obecniDum));*/
     }
 
-    //Spuštění navigace
+    private GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        return geoApiContext.setQueryRateLimit(10).setApiKey("AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4")
+                .setConnectTimeout(10, TimeUnit.SECONDS).setReadTimeout(10, TimeUnit.SECONDS)
+                .setWriteTimeout(10, TimeUnit.SECONDS);
+    }
+
+    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
+                results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,
+                results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
+        //Posune kameru na určený bod
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(results.routes[0].legs[0].startLocation.lat,
+                results.routes[0].legs[0].startLocation.lng)));
+        //Nastavení min a max přiblížení
+        mMap.setMinZoomPreference(15.0f);
+        mMap.setMaxZoomPreference(18.0f);
+    }
+
+    private String getEndLocationTitle(DirectionsResult results){
+        return  "Time :"+ results.routes[0].legs[0].duration.humanReadable + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
+    }
+
+    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+    }
+
+    /*Spuštění navigace
     public void launchNavigation(View view){
         //Vytvoření url požadavku pro navigaci
         String uri = "https://www.google.com/maps/dir/?api=1&origin=" + hlaska.latitude + "%2C" + hlaska.longitude + "&destination=" + obecniDum.latitude + "%2C" + obecniDum.longitude + "&waypoints=" + slezskeDivadlo.latitude + "%2C" + slezskeDivadlo.longitude + "%7C" + kostelMarie.latitude + "%2C" + kostelMarie.longitude + "&travelmode=walking&dir_action=navigate";
@@ -93,5 +152,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
         startActivity(intent);
-    }
+    }*/
 }
