@@ -13,4 +13,6 @@
     <string name="dialog_connect">This application requires an Internet connection at all times.</string>
     <string name="dialog_cancel">cancel</string>
     <string name="dialog_confirm">OK</string>
+    <string name="info_message">Tato aplikace vyžaduje připojení k internetu.</string>
+    <string name="button_how">Jak to funguje?</string>
 </resources>

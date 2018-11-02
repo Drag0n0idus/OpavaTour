@@ -54,10 +54,10 @@ import java.util.concurrent.TimeUnit;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    LatLng hlaska = new LatLng(49.938887, 17.902368);
-    LatLng slezskeDivadlo = new LatLng(49.938963, 17.901628);
-    LatLng kostelMarie = new LatLng(49.938773, 17.900169);
-    LatLng obecniDum = new LatLng(49.936215, 17.901329);
+    String hlaska = "49.938887, 17.902368";
+    String slezskeDivadlo = "49.938963, 17.901628";
+    String kostelMarie = "49.938773, 17.900169";
+    String obecniDum = "49.936215, 17.901329";
     DirectionsResult result;
     DateTime now;
 
@@ -79,7 +79,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         now = new DateTime();
         try {
             result = DirectionsApi.newRequest(getGeoContext())
-                    .mode(TravelMode.WALKING).origin("49.938887, 17.902368").destination("49.938963, 17.901628").departureTime(now).await();
+                    .mode(TravelMode.WALKING).origin(hlaska).destination(obecniDum)
+                    .waypoints(slezskeDivadlo, kostelMarie).departureTime(now).await();
         } catch (ApiException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -117,16 +118,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
-        return geoApiContext.setQueryRateLimit(10).setApiKey("AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4")
-                .setConnectTimeout(10, TimeUnit.SECONDS).setReadTimeout(10, TimeUnit.SECONDS)
-                .setWriteTimeout(10, TimeUnit.SECONDS);
+        return geoApiContext.setQueryRateLimit(3).setApiKey("AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4")
+                .setConnectTimeout(1, TimeUnit.SECONDS).setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
     }
 
     private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
+        //Leg 0 Start -> Hláska | Leg 0 End -> Divadlo
         mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
                 results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
         mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,
-                results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].startAddress).snippet(getEndLocationTitle(results)));
+                results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].endAddress));
+        //Leg 1 Start -> Divadlo | Leg 1 End -> Kostel
+        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[1].endLocation.lat,
+                results.routes[0].legs[1].endLocation.lng)).title(results.routes[0].legs[1].endAddress));
+        //Leg 2 Start -> Kostel | Leg 2 End -> Obecní dům
+        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[2].endLocation.lat,
+                results.routes[0].legs[2].endLocation.lng)).title(results.routes[0].legs[2].endAddress));
         //Posune kameru na určený bod
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(results.routes[0].legs[0].startLocation.lat,
                 results.routes[0].legs[0].startLocation.lng)));
@@ -135,7 +143,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMaxZoomPreference(18.0f);
     }
 
-    private String getEndLocationTitle(DirectionsResult results){
+    private String getEndLocationTitle(DirectionsResult results, int leg){
         return  "Time :"+ results.routes[0].legs[0].duration.humanReadable + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
     }
 
