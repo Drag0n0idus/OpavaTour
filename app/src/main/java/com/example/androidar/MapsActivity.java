@@ -59,13 +59,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String slezskeDivadlo = "49.938963, 17.901628";
     String kostelMarie = "49.938773, 17.900169";
     String obecniDum = "49.936215, 17.901329";
-    int count = 4;
+    int count = 5;
     DirectionsResult result;
     DateTime now;
     String[] waypoints;
-    String[] test = {"49.938887, 17.902368", "49.936215, 17.901329", "49.938963, 17.901628", "49.938773, 17.900169"};
+    String[] test = {"49.938887, 17.902368", "49.936215, 17.901329", "49.938963, 17.901628", "49.938773, 17.900169", "49.940900, 17.893140"};
     List<String> testing = Arrays.asList(test);
-    int waypointCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +76,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Funkce onMapReady vrací JSON s popisem trasy.
+     * Funkce onMapReady vrací JSON s popisem trasy, který dále použije ve funkcích addMarkersToMap
+     * a addPolyline.
      * Atribut {@code origin} označuje počáteční bod trasy.
      * Atribut {@code destination} označuje cílový bod trasy.
      * Atribut {@code waypoints} je nepovinný údaj, označuje zastávky na trase.
@@ -95,17 +95,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 result = DirectionsApi.newRequest(getGeoContext())
                         .mode(TravelMode.WALKING).origin(testing.get(0)).destination(testing.get(1)).departureTime(now).await();
             } else {
-                for(int i = 0; i < (count - 2); i++){
-                    waypoints[i] = testing.get(i+2);
+                waypoints = new String[count-2];
+                for(int i = 2; i < count; i++){
+                    waypoints[i-2] = testing.get(i);
                 }
                 result = DirectionsApi.newRequest(getGeoContext())
                         .mode(TravelMode.WALKING).origin(testing.get(0)).destination(testing.get(1)).waypoints(waypoints).departureTime(now).await();
             }
-
-
-            result = DirectionsApi.newRequest(getGeoContext())
-                    .mode(TravelMode.WALKING).origin(hlaska).destination(obecniDum)
-                    .waypoints(slezskeDivadlo, kostelMarie).departureTime(now).await();
         } catch (ApiException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -126,6 +122,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
+                results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
+        for(int i = 0; i < (count - 1); i++) {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[i].endLocation.lat,
+                    results.routes[0].legs[i].endLocation.lng)).title(results.routes[0].legs[i].endAddress));
+        }
+
+
+        /*
         //Leg 0 Start -> Hláska | Leg 0 End -> Divadlo
         mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
                 results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
@@ -136,7 +141,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 results.routes[0].legs[1].endLocation.lng)).title(results.routes[0].legs[1].endAddress));
         //Leg 2 Start -> Kostel | Leg 2 End -> Obecní dům
         mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[2].endLocation.lat,
-                results.routes[0].legs[2].endLocation.lng)).title(results.routes[0].legs[2].endAddress));
+                results.routes[0].legs[2].endLocation.lng)).title(results.routes[0].legs[2].endAddress));*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(results.routes[0].legs[0].startLocation.lat,
                 results.routes[0].legs[0].startLocation.lng)));
         mMap.setMinZoomPreference(15.0f);
