@@ -48,6 +48,7 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -58,26 +59,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     String slezskeDivadlo = "49.938963, 17.901628";
     String kostelMarie = "49.938773, 17.900169";
     String obecniDum = "49.936215, 17.901329";
+    int count = 4;
     DirectionsResult result;
     DateTime now;
+    String[] waypoints;
+    String[] test = {"49.938887, 17.902368", "49.936215, 17.901329", "49.938963, 17.901628", "49.938773, 17.900169"};
+    List<String> testing = Arrays.asList(test);
+    int waypointCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        //Vytvoření mapFragment - objekt držící mapu
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
-    //Funkce na vytvoření mapy a přidání markerů
+    /**
+     * Funkce onMapReady vrací JSON s popisem trasy.
+     * Atribut {@code origin} označuje počáteční bod trasy.
+     * Atribut {@code destination} označuje cílový bod trasy.
+     * Atribut {@code waypoints} je nepovinný údaj, označuje zastávky na trase.
+     * Atribut {@code departureTime} označuje čas počátku prohlídky.
+     *
+     * @return JSON s informacemi o trase.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         now = new DateTime();
         try {
+            if(count == 2){
+                result = DirectionsApi.newRequest(getGeoContext())
+                        .mode(TravelMode.WALKING).origin(testing.get(0)).destination(testing.get(1)).departureTime(now).await();
+            } else {
+                for(int i = 0; i < (count - 2); i++){
+                    waypoints[i] = testing.get(i+2);
+                }
+                result = DirectionsApi.newRequest(getGeoContext())
+                        .mode(TravelMode.WALKING).origin(testing.get(0)).destination(testing.get(1)).waypoints(waypoints).departureTime(now).await();
+            }
+
+
             result = DirectionsApi.newRequest(getGeoContext())
                     .mode(TravelMode.WALKING).origin(hlaska).destination(obecniDum)
                     .waypoints(slezskeDivadlo, kostelMarie).departureTime(now).await();
@@ -91,29 +116,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         addMarkersToMap(result, mMap);
         addPolyline(result, mMap);
-
-        /*Přidá markery na daných koordinátech
-        mMap.addMarker(new MarkerOptions().position(hlaska).title("Hláska"));
-        mMap.addMarker(new MarkerOptions().position(slezskeDivadlo).title("Slezské Divadlo"));
-        mMap.addMarker(new MarkerOptions().position(kostelMarie).title("Konkatedrála Nanebevzetí Panny Marie"));
-        mMap.addMarker(new MarkerOptions().position(obecniDum).title("Obecní Dům"));
-
-
-
-        //Vytvoří spojnici mezi markery
-        Polyline polyline = mMap.addPolyline(new PolylineOptions()
-                .clickable(true)
-                .add(
-                        hlaska,
-                        slezskeDivadlo,
-                        sDtokM1,
-                        sDtokM2,
-                        kostelMarie,
-                        kMtooD1,
-                        kMtooD2,
-                        kMtooD3,
-                        kMtooD4,
-                        obecniDum));*/
     }
 
     private GeoApiContext getGeoContext() {
@@ -135,10 +137,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Leg 2 Start -> Kostel | Leg 2 End -> Obecní dům
         mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[2].endLocation.lat,
                 results.routes[0].legs[2].endLocation.lng)).title(results.routes[0].legs[2].endAddress));
-        //Posune kameru na určený bod
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(results.routes[0].legs[0].startLocation.lat,
                 results.routes[0].legs[0].startLocation.lng)));
-        //Nastavení min a max přiblížení
         mMap.setMinZoomPreference(15.0f);
         mMap.setMaxZoomPreference(18.0f);
     }
