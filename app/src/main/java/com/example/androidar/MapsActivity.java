@@ -1,45 +1,14 @@
 package com.example.androidar;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.androidar.tour_info.TourInfo;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
-import com.google.maps.android.PolyUtil;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TravelMode;
@@ -47,24 +16,14 @@ import com.google.maps.model.TravelMode;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    String hlaska = "49.938887, 17.902368";
-    String slezskeDivadlo = "49.938963, 17.901628";
-    String kostelMarie = "49.938773, 17.900169";
-    String obecniDum = "49.936215, 17.901329";
-    int count = 5;
-    DirectionsResult result;
-    DateTime now;
-    String[] waypoints;
-    String[] test = {"49.938887, 17.902368", "49.936215, 17.901329", "49.938963, 17.901628", "49.938773, 17.900169", "49.940900, 17.893140"};
-    List<String> testing = Arrays.asList(test);
+    private TourInfo tourInfo;
+    private DirectionsResult result;
+    private DateTime now;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,31 +35,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     /**
-     * Funkce onMapReady vrací JSON s popisem trasy, který dále použije ve funkcích addMarkersToMap
-     * a addPolyline.
-     * Atribut {@code origin} označuje počáteční bod trasy.
-     * Atribut {@code destination} označuje cílový bod trasy.
-     * Atribut {@code waypoints} je nepovinný údaj, označuje zastávky na trase.
-     * Atribut {@code departureTime} označuje čas počátku prohlídky.
+     * Funkce onMapReady vytvoří instanci třídy TourInfo, která obsahuje informace a metody
+     * potřebné k vytvoření trasy, kterou poté vytvoří a vykreslí.
      *
-     * @return JSON s informacemi o trase.
+     * @param googleMap - instance třídy GoogleMap
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        tourInfo = new TourInfo();
         now = new DateTime();
         try {
-            if(count == 2){
-                result = DirectionsApi.newRequest(getGeoContext())
-                        .mode(TravelMode.WALKING).origin(testing.get(0)).destination(testing.get(1)).departureTime(now).await();
+            if(tourInfo.getWaypoints() == null){
+                result = DirectionsApi.newRequest(tourInfo.getGeoContext())
+                        .mode(TravelMode.WALKING).origin(tourInfo.getOrigin()).destination(tourInfo.getDestination()).departureTime(now).await();
             } else {
-                waypoints = new String[count-2];
-                for(int i = 2; i < count; i++){
-                    waypoints[i-2] = testing.get(i);
-                }
-                result = DirectionsApi.newRequest(getGeoContext())
-                        .mode(TravelMode.WALKING).origin(testing.get(0)).destination(testing.get(1)).waypoints(waypoints).departureTime(now).await();
+                result = DirectionsApi.newRequest(tourInfo.getGeoContext())
+                        .mode(TravelMode.WALKING).origin(tourInfo.getOrigin()).destination(tourInfo.getDestination()).waypoints(tourInfo.getWaypoints()).departureTime(now).await();
             }
         } catch (ApiException e) {
             e.printStackTrace();
@@ -110,51 +61,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
 
-        addMarkersToMap(result, mMap);
-        addPolyline(result, mMap);
-    }
-
-    private GeoApiContext getGeoContext() {
-        GeoApiContext geoApiContext = new GeoApiContext();
-        return geoApiContext.setQueryRateLimit(3).setApiKey("AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4")
-                .setConnectTimeout(1, TimeUnit.SECONDS).setReadTimeout(1, TimeUnit.SECONDS)
-                .setWriteTimeout(1, TimeUnit.SECONDS);
-    }
-
-    private void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
-                results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
-        for(int i = 0; i < (count - 1); i++) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[i].endLocation.lat,
-                    results.routes[0].legs[i].endLocation.lng)).title(results.routes[0].legs[i].endAddress));
-        }
-
-
-        /*
-        //Leg 0 Start -> Hláska | Leg 0 End -> Divadlo
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
-                results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].endLocation.lat,
-                results.routes[0].legs[0].endLocation.lng)).title(results.routes[0].legs[0].endAddress));
-        //Leg 1 Start -> Divadlo | Leg 1 End -> Kostel
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[1].endLocation.lat,
-                results.routes[0].legs[1].endLocation.lng)).title(results.routes[0].legs[1].endAddress));
-        //Leg 2 Start -> Kostel | Leg 2 End -> Obecní dům
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[2].endLocation.lat,
-                results.routes[0].legs[2].endLocation.lng)).title(results.routes[0].legs[2].endAddress));*/
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(results.routes[0].legs[0].startLocation.lat,
-                results.routes[0].legs[0].startLocation.lng)));
-        mMap.setMinZoomPreference(15.0f);
-        mMap.setMaxZoomPreference(18.0f);
-    }
-
-    private String getEndLocationTitle(DirectionsResult results, int leg){
-        return  "Time :"+ results.routes[0].legs[0].duration.humanReadable + " Distance :" + results.routes[0].legs[0].distance.humanReadable;
-    }
-
-    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+        tourInfo.addMarkersToMap(result, mMap);
+        tourInfo.addPolyline(result, mMap);
     }
 
     /*Spuštění navigace
