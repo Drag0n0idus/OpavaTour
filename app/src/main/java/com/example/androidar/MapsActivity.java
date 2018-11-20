@@ -1,7 +1,9 @@
 package com.example.androidar;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.androidar.tour_info.TourInfo;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,7 +21,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    private TextView TourText;
     private GoogleMap mMap;
     private TourInfo tourInfo;
     private DirectionsResult result;
@@ -29,11 +31,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        TourText = (TextView) findViewById(R.id.textView4);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
     /**
      * Funkce onMapReady vytvoří instanci třídy TourInfo, která obsahuje informace a metody
      * potřebné k vytvoření trasy, kterou poté vytvoří a vykreslí.
@@ -43,7 +45,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        tourInfo = new TourInfo();
+        tourInfo = new TourInfo(MapsActivity.this);
+        TourName(tourInfo.name);
         now = new DateTime();
         try {
             if(tourInfo.getWaypoints() == null){
@@ -65,6 +68,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tourInfo.addPolyline(result, mMap);
     }
 
+    public void TourName(String name){
+        this.TourText.setBackgroundColor(Color.BLUE);
+        this.TourText.setText(name);
+    }
     /*Spuštění navigace
     public void launchNavigation(View view){
         //Vytvoření url požadavku pro navigaci

@@ -1,6 +1,9 @@
 package com.example.androidar.tour_info;
 
+import android.content.Context;
 import android.os.AsyncTask;
+
+import com.example.androidar.HowActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,9 +18,19 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     String data = "";
     String dataParsed = "";
     String singleParsed = "";
+    private TourInfo mContext;
+    private TaskCompleted mCallback;
+
+
+    public fetchData(TourInfo context){
+        this.mContext = context;
+        this.mCallback = (TaskCompleted) context;
+
+    }
+
     @Override
     protected Void doInBackground(Void... voids) {
-        try {
+        /*try {
             URL url = new URL("http://192.168.2.130/android-project-server/www/api/tour?id=1");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
@@ -27,7 +40,9 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
             while(line != null){
                 line = bufferedReader.readLine();
                 data = data + line;
-            }
+            }*/
+            data="TEST-NAME";
+
 
             /*JSONArray JA = new JSONArray(data);
             for(int i = 0;i <JA.length();i++){
@@ -44,11 +59,11 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
 
 
 
-        } catch (MalformedURLException e) {
+        /*} catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } /*catch (JSONException e) {
+        }*/ /*catch (JSONException e) {
             e.printStackTrace();
         }*/
 
@@ -56,9 +71,11 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
         return null;
     }
 
+
+
     @Override
     protected void onPostExecute(Void eVoid) {
         super.onPostExecute(eVoid);
-        //return parased data
+        mCallback.onTaskComplete(data);
     }
 }

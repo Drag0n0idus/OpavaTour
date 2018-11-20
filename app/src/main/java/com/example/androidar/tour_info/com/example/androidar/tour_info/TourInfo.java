@@ -1,5 +1,6 @@
 package com.example.androidar.tour_info;
 
+import com.example.androidar.MapsActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -12,18 +13,23 @@ import com.google.maps.model.DirectionsResult;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class TourInfo {
+public class TourInfo implements TaskCompleted{
+    private MapsActivity mapsContext;
+    private final String apiKey = "AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4";
     private String origin = "";
     private String destination = "";
     private String[] waypoints = null;
-
+    private String author = "";
+    public String name = "";
     //From database later, now for testing
     int count = 5;
     private String[] test = {"49.938887, 17.902368", "49.936215, 17.901329", "49.938963, 17.901628", "49.938773, 17.900169", "49.940900, 17.893140"};
     private String originDb = test[0];
     private String destinationDb = test[1];
 
-    public TourInfo() {
+    public TourInfo(MapsActivity mapsContext) {
+        new fetchData(TourInfo.this).execute();
+        this.mapsContext=mapsContext;
         this.setWaypoints(count);
         this.setOrigin(originDb);
         this.setDestination(destinationDb);
@@ -31,7 +37,7 @@ public class TourInfo {
 
     public GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
-        return geoApiContext.setQueryRateLimit(3).setApiKey("AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4")
+        return geoApiContext.setQueryRateLimit(3).setApiKey(apiKey)
                 .setConnectTimeout(1, TimeUnit.SECONDS).setReadTimeout(1, TimeUnit.SECONDS)
                 .setWriteTimeout(1, TimeUnit.SECONDS);
     }
@@ -79,5 +85,10 @@ public class TourInfo {
         for(int i = 2; i < count; i++){
             this.waypoints[i-2] = test[i];
         }
+    }
+
+    @Override
+    public void onTaskComplete(String result) {
+        this.mapsContext.TourName(result);
     }
 }
