@@ -10,6 +10,9 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +29,9 @@ public class TourInfo implements TaskCompleted{
     private String[] test = {"49.938887, 17.902368", "49.936215, 17.901329", "49.938963, 17.901628", "49.938773, 17.900169", "49.940900, 17.893140"};
     private String originDb = test[0];
     private String destinationDb = test[1];
+    //
+
+    private Point[] points;
 
     public TourInfo(MapsActivity mapsContext) {
         new fetchData(TourInfo.this).execute();
@@ -88,7 +94,36 @@ public class TourInfo implements TaskCompleted{
     }
 
     @Override
-    public void onTaskComplete(String result) {
-        this.mapsContext.TourName(result);
+    public void onTaskComplete(String result, String identifier){
+        JSONObject JObject;
+
+        switch(identifier){
+            case "tour":
+                try {
+                    JObject=new JSONObject(result);
+                    this.mapsContext.TourName((String)JObject.get("name"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case "points":
+                break;
+
+            default:
+
+                break;
+        }
+    /*            JSONArray JA = new JSONArray(data);
+            for(int i = 0;i <JA.length();i++){
+                JSONObject JO = (JSONObject) JA.get(i);
+                singleParsed =  "Name:" + JO.get("name") + "\n"+
+                        "Password:" + JO.get("password") + "\n"+
+                        "Contact:" + JO.get("contact") + "\n"+
+                        "Country:" + JO.get("country") + "\n";
+
+                dataParsed = dataParsed + singleParsed + "\n";
+            }*/
+
     }
 }

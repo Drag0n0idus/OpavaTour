@@ -1,9 +1,6 @@
 package com.example.androidar.tour_info;
 
-import android.content.Context;
 import android.os.AsyncTask;
-
-import com.example.androidar.HowActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,21 +13,19 @@ import java.net.URL;
 // Otevře stream a stáhne JSON file, který následně parasuje (https://www.youtube.com/watch?v=Vcn4OuV4Ixg)
 public class fetchData extends AsyncTask<Void,Void,Void> {
     String data = "";
-    String dataParsed = "";
-    String singleParsed = "";
-    private TourInfo mContext;
+    String identifier = "tour";
     private TaskCompleted mCallback;
 
 
     public fetchData(TourInfo context){
-        this.mContext = context;
-        this.mCallback = (TaskCompleted) context;
+        this.mCallback = context;
 
     }
 
+
     @Override
     protected Void doInBackground(Void... voids) {
-        /*try {
+        try {
             URL url = new URL("http://192.168.2.130/android-project-server/www/api/tour?id=1");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
@@ -40,42 +35,22 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
             while(line != null){
                 line = bufferedReader.readLine();
                 data = data + line;
-            }*/
-            data="TEST-NAME";
-
-
-            /*JSONArray JA = new JSONArray(data);
-            for(int i = 0;i <JA.length();i++){
-                JSONObject JO = (JSONObject) JA.get(i);
-                singleParsed =  "Name:" + JO.get("name") + "\n"+
-                        "Password:" + JO.get("password") + "\n"+
-                        "Contact:" + JO.get("contact") + "\n"+
-                        "Country:" + JO.get("country") + "\n";
-
-                dataParsed = dataParsed + singleParsed + "\n";
-            }*/
-
-
-
-
-
-        /*} catch (MalformedURLException e) {
+            }
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/ /*catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        }
 
+        data="{\"tour\":\"TEST-tour\",\"author\":\"Admin\"}";
 
         return null;
     }
 
 
-
     @Override
     protected void onPostExecute(Void eVoid) {
         super.onPostExecute(eVoid);
-        mCallback.onTaskComplete(data);
+        mCallback.onTaskComplete(data,identifier);
     }
 }
