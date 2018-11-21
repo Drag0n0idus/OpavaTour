@@ -10,6 +10,7 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.model.DirectionsResult;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -95,19 +96,29 @@ public class TourInfo implements TaskCompleted{
 
     @Override
     public void onTaskComplete(String result, String identifier){
-        JSONObject JObject;
-
         switch(identifier){
             case "tour":
                 try {
-                    JObject=new JSONObject(result);
-                    this.mapsContext.TourName((String)JObject.get("name"));
-                } catch (JSONException e) {
+                    JSONObject JObject=new JSONObject(result);
+                    this.name=(String)JObject.get("name");
+                    this.author=(String)JObject.get("author");
+                    this.mapsContext.TourName(this.name);
+                }catch (JSONException e) {
                     e.printStackTrace();
                 }
                 break;
 
             case "points":
+                try{
+                    JSONArray JArray = new JSONArray(result);
+                    this.points=new Point[JArray.length()];
+                    for(int i = 0;i <JArray.length();i++){
+                        JSONObject JO = (JSONObject) JArray.get(i);
+                        this.points[i]=new Point((String)JO.get("coorinateE"),(String)JO.get("coorinateN"),(String)JO.get("name"),(int)JO.get("order"));
+                    }
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             default:

@@ -10,10 +10,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-// Otevře stream a stáhne JSON file, který následně parasuje (https://www.youtube.com/watch?v=Vcn4OuV4Ixg)
-public class fetchData extends AsyncTask<Void,Void,Void> {
+// Otevře stream a stáhne JSON file (https://www.youtube.com/watch?v=Vcn4OuV4Ixg)
+public class fetchData extends AsyncTask<String,Void,Void> {
     String data = "";
-    String identifier = "tour";
+    String identifier = "";
     private TaskCompleted mCallback;
 
 
@@ -24,9 +24,11 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
 
 
     @Override
-    protected Void doInBackground(Void... voids) {
-        try {
-            URL url = new URL("http://192.168.2.130/android-project-server/www/api/tour?id=1");
+    protected Void doInBackground(String... params) {
+        /*try {
+            this.identifier=params[1];
+            //URL url = new URL("http://192.168.2.130/android-project-server/www/api/tour?id=1");
+            URL url = new URL(params[0]);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -34,16 +36,16 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
             String line = "";
             while(line != null){
                 line = bufferedReader.readLine();
-                data = data + line;
+                this.data = this.data + line;
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         data="{\"tour\":\"TEST-tour\",\"author\":\"Admin\"}";
-
+        identifier="tour";
         return null;
     }
 
@@ -51,6 +53,6 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     @Override
     protected void onPostExecute(Void eVoid) {
         super.onPostExecute(eVoid);
-        mCallback.onTaskComplete(data,identifier);
+        mCallback.onTaskComplete(this.data,this.identifier);
     }
 }
