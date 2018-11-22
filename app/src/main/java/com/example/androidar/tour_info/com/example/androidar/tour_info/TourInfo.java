@@ -25,21 +25,12 @@ public class TourInfo implements TaskCompleted{
     private String[] waypoints = null;
     private String author = "";
     public String name = "";
-    //From database later, now for testing
-    int count = 5;
-    private String[] test = {"49.938887, 17.902368", "49.936215, 17.901329", "49.938963, 17.901628", "49.938773, 17.900169", "49.940900, 17.893140"};
-    private String originDb = test[0];
-    private String destinationDb = test[1];
-    //
 
     private Point[] points;
 
     public TourInfo(MapsActivity mapsContext) {
-        new fetchData(TourInfo.this).execute();
         this.mapsContext=mapsContext;
-        this.setWaypoints(count);
-        this.setOrigin(originDb);
-        this.setDestination(destinationDb);
+        new fetchData(TourInfo.this).execute();
     }
 
     public GeoApiContext getGeoContext() {
@@ -52,7 +43,7 @@ public class TourInfo implements TaskCompleted{
     public void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
         mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
                 results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
-        for(int i = 0; i < (count - 1); i++) {
+        for(int i = 0; i < (points.length - 1); i++) {
             mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[i].endLocation.lat,
                     results.routes[0].legs[i].endLocation.lng)).title(results.routes[0].legs[i].endAddress));
         }
@@ -87,10 +78,10 @@ public class TourInfo implements TaskCompleted{
         return waypoints;
     }
 
-    public void setWaypoints(int count) {
-        this.waypoints = new String[count-2];
-        for(int i = 2; i < count; i++){
-            this.waypoints[i-2] = test[i];
+    public void setWaypoints() {
+        this.waypoints = new String[this.points.length-2];
+        for(int i = 2; i < this.points.length; i++){
+            this.waypoints[i-2] = this.points[i].getCoorinateE() + ", " + this.points[i].getCoorinateN();
         }
     }
 
@@ -114,8 +105,13 @@ public class TourInfo implements TaskCompleted{
                     this.points=new Point[JArray.length()];
                     for(int i = 0;i <JArray.length();i++){
                         JSONObject JO = (JSONObject) JArray.get(i);
-                        this.points[i]=new Point((String)JO.get("coorinateE"),(String)JO.get("coorinateN"),(String)JO.get("name"),(int)JO.get("order"));
+                        this.points[i]=new Point((String)JO.get("coordinateE"),(String)JO.get("coordinateN"),(String)JO.get("name"),(int)JO.get("order"));
                     }
+                    if(points.length > 2) {
+                        this.setWaypoints();
+                    }
+                    this.setOrigin(points[0].getCoorinateE() + ", " + points[0].getCoorinateN());
+                    this.setDestination(points[1].getCoorinateE() + ", " + points[1].getCoorinateN());
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }

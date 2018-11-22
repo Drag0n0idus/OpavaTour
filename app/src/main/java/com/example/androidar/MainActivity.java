@@ -21,7 +21,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //Spuštění Map
+    //Spuštění QR
+    public void openQR(View view) {
+        Intent intent = new Intent(this, QRActivity.class);
+        startActivity(intent);
+    }
+
+    //Spuštění How To
     public void openHow(View view) {
         Intent intent = new Intent(this, HowActivity.class);
         startActivity(intent);
