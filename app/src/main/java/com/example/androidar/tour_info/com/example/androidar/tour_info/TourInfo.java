@@ -81,7 +81,7 @@ public class TourInfo implements TaskCompleted{
     public void setWaypoints() {
         this.waypoints = new String[this.points.length-2];
         for(int i = 2; i < this.points.length; i++){
-            this.waypoints[i-2] = this.points[i].getCoorinateE() + ", " + this.points[i].getCoorinateN();
+            this.waypoints[i-2] = this.points[i].getLongitude() + ", " + this.points[i].getLatitude();
         }
     }
 
@@ -105,13 +105,13 @@ public class TourInfo implements TaskCompleted{
                     this.points=new Point[JArray.length()];
                     for(int i = 0;i <JArray.length();i++){
                         JSONObject JO = (JSONObject) JArray.get(i);
-                        this.points[i]=new Point((String)JO.get("coordinateE"),(String)JO.get("coordinateN"),(String)JO.get("name"),(int)JO.get("order"));
+                        this.points[i]=new Point((String)JO.get("longitude"),(String)JO.get("latitude"),(String)JO.get("name"),(int)JO.get("order"));
                     }
                     if(points.length > 2) {
                         this.setWaypoints();
                     }
-                    this.setOrigin(points[0].getCoorinateE() + ", " + points[0].getCoorinateN());
-                    this.setDestination(points[1].getCoorinateE() + ", " + points[1].getCoorinateN());
+                    this.setOrigin(points[0].getLongitude() + ", " + points[0].getLatitude());
+                    this.setDestination(points[1].getLongitude() + ", " + points[1].getLatitude());
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
