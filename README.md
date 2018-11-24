@@ -15,5 +15,7 @@
 - [Google](https://www.google.cz/)
 - [Android Developers](https://developer.android.com/)
 - [Mgr. Marek Lučný](http://lucny.sspu-opava.cz/)
+## Web Server
+- https://github.com/Garttox/android-project-server
 ### Konzultující učitel
 **_Mgr. Marek Lučný_**
