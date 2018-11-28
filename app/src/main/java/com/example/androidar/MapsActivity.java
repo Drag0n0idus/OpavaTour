@@ -31,6 +31,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        int tourID= Integer.parseInt(getIntent().getExtras().getString("QRresult"));
         TourText = (TextView) findViewById(R.id.textView4);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
