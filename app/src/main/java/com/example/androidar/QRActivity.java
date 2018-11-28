@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.google.zxing.Result;
 
+import java.util.regex.Pattern;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
@@ -130,7 +132,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if(myResult.contains("|")){
-            final String splited[] = myResult.split("|");
+            final String splited[] = myResult.split(Pattern.quote("|"));
             if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){
                 builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
                     @Override
@@ -146,6 +148,15 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                     }
                 });
                 builder.setMessage(myResult);
+            }
+            else{
+                builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        scannerView.resumeCameraPreview(QRActivity.this);
+                    }
+                });
+                builder.setMessage("QR kód má špatný formát");
             }
         }
         else {
