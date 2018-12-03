@@ -147,7 +147,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                         openMaps(splited[1]);
                     }
                 });
-                builder.setMessage(myResult);
+                builder.setMessage(splited[0] + splited[1]);
             }
             else{
                 builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {

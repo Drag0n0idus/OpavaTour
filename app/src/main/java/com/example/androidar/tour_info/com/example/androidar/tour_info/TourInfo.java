@@ -25,13 +25,15 @@ public class TourInfo implements TaskCompleted{
     private String[] waypoints = null;
     private String author = "";
     public String name = "";
-
+    private String id;
     private Point[] points;
 
-    public TourInfo(MapsActivity mapsContext) {
+    public TourInfo(MapsActivity mapsContext, String id) {
         this.mapsContext=mapsContext;
-        new fetchData(TourInfo.this).execute();
+        this.id=id;
+        new fetchData(TourInfo.this).execute("http://www.garttox.jedovarnik.cz/api/tour?id="+this.id,"tour");
     }
+
 
     public GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
@@ -97,6 +99,7 @@ public class TourInfo implements TaskCompleted{
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
+                new fetchData(TourInfo.this).execute("http://www.garttox.jedovarnik.cz/api/points?id="+this.id,"points");
                 break;
 
             case "points":
@@ -115,6 +118,7 @@ public class TourInfo implements TaskCompleted{
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
+                this.mapsContext.startMap();
                 break;
 
             default:

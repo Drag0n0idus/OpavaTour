@@ -17,7 +17,7 @@ public class fetchData extends AsyncTask<String,Void,Void> {
     private TaskCompleted mCallback;
 
 
-    public fetchData(TourInfo context){
+    public fetchData(TaskCompleted context){
         this.mCallback = context;
 
     }
@@ -25,7 +25,7 @@ public class fetchData extends AsyncTask<String,Void,Void> {
 
     @Override
     protected Void doInBackground(String... params) {
-        /*try {
+        try {
             this.identifier=params[1];
             //URL url = new URL("http://192.168.2.130/android-project-server/www/api/tour?id=1");
             URL url = new URL(params[0]);
@@ -42,10 +42,10 @@ public class fetchData extends AsyncTask<String,Void,Void> {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        data="{\"tour\":\"TEST-tour\",\"author\":\"Admin\"}";
-        identifier="tour";
+        /*data="{\"tour\":\"TEST-tour\",\"author\":\"Admin\"}";
+        identifier="tour";*/
         return null;
     }
 
