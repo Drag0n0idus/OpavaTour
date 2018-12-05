@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class TourInfo implements TaskCompleted{
     private MapsActivity mapsContext;
     private final String apiKey = "AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4";
+    private final String apiServer = "http://www.garttox.jedovarnik.cz/api/";
     private String origin = "";
     private String destination = "";
     private String[] waypoints = null;
@@ -31,7 +32,7 @@ public class TourInfo implements TaskCompleted{
     public TourInfo(MapsActivity mapsContext, String id) {
         this.mapsContext=mapsContext;
         this.id=id;
-        new fetchData(TourInfo.this).execute("http://www.garttox.jedovarnik.cz/api/tour?id="+this.id,"tour");
+        new fetchData(TourInfo.this).execute(apiServer+"tour?id="+id,"tour");
     }
 
 
@@ -99,7 +100,7 @@ public class TourInfo implements TaskCompleted{
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
-                new fetchData(TourInfo.this).execute("http://www.garttox.jedovarnik.cz/api/points?id="+this.id,"points");
+                new fetchData(TourInfo.this).execute(apiServer+"points?id="+this.id,"points");
                 break;
 
             case "points":
@@ -120,8 +121,15 @@ public class TourInfo implements TaskCompleted{
                 }
                 this.mapsContext.startMap();
                 break;
+            case "pointDetail":
+                try{
+                    JSONObject JObject=new JSONObject(result);
+                    int order=Integer.parseInt((String)JObject.get("order"));
+                    this.points[order-1].setText((String)JObject.get("text"));
 
-            default:
+                }catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 break;
         }

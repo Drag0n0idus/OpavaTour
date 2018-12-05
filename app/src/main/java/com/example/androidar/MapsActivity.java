@@ -50,7 +50,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void startMap(){
-
         now = new DateTime();
         try {
             if(tourInfo.getWaypoints() == null){
@@ -71,6 +70,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tourInfo.addMarkersToMap(result, mMap);
         tourInfo.addPolyline(result, mMap);
     }
+
 
     public void TourName(String name){
         this.TourText.setBackgroundColor(Color.BLUE);

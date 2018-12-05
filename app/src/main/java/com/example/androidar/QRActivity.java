@@ -15,16 +15,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.androidar.tour_info.TaskCompleted;
+import com.example.androidar.tour_info.fetchData;
 import com.google.zxing.Result;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.annotation.Target;
 import java.util.regex.Pattern;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
 // https://www.youtube.com/watch?v=otkz5Cwdw38&t=924s
-public class QRActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class QRActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler, TaskCompleted {
 
+    private final String apiServer = "http://www.garttox.jedovarnik.cz/api/";
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView scannerView;
     private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -134,20 +141,8 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         if(myResult.contains("|")){
             final String splited[] = myResult.split(Pattern.quote("|"));
             if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){
-                builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        scannerView.resumeCameraPreview(QRActivity.this);
-                    }
-                });
-                builder.setNeutralButton("Pokračovat na mapu", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                new fetchData(QRActivity.this).execute();
 
-                        openMaps(splited[1]);
-                    }
-                });
-                builder.setMessage(splited[0] + splited[1]);
             }
             else{
                 builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
@@ -172,6 +167,25 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         alert1.show();
     }
 
+    public void verified(String name, final String id){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                scannerView.resumeCameraPreview(QRActivity.this);
+            }
+        });
+        builder.setNeutralButton("Ano", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                openMaps(id);
+            }
+        });
+        builder.setMessage("Přejete si spustit stezku: "+ name);
+    }
+
     //Spuštění Map
     public void openMaps(String result) {
         Intent intent = new Intent(this, MapsActivity.class);
@@ -179,4 +193,8 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         startActivity(intent);
     }
 
+    @Override
+    public void onTaskComplete(String result, String identifier){
+
+    }
 }
