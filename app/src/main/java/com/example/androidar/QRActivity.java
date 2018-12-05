@@ -35,6 +35,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView scannerView;
     private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
+    private String myResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,14 +135,13 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
 
     @Override
     public void handleResult(Result result) {
-        final String myResult = result.getText();
-
+        myResult = result.getText();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if(myResult.contains("|")){
             final String splited[] = myResult.split(Pattern.quote("|"));
             if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){
-                new fetchData(QRActivity.this).execute();
+                new fetchData(QRActivity.this).execute("","");
 
             }
             else{
@@ -167,7 +167,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         alert1.show();
     }
 
-    public void verified(String name, final String id){
+    public void verified(String name){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
@@ -180,7 +180,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                openMaps(id);
+                openMaps(myResult);
             }
         });
         builder.setMessage("Přejete si spustit stezku: "+ name);
@@ -195,6 +195,27 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
 
     @Override
     public void onTaskComplete(String result, String identifier){
+        JSONObject JObject= null;
+        try {
+            JObject = new JSONObject(result);
+            String status=(String)JObject.get("status");
+            if(status.equals("avaible")){
+                this.verified((String)JObject.get("title"));
+            }
+            else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        scannerView.resumeCameraPreview(QRActivity.this);
+                    }
+                });
+                builder.setMessage("Tahle stezka buď již nefunguje nebo neexistuje");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 }
