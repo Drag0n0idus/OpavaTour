@@ -141,7 +141,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         if(myResult.contains("|")){
             final String splited[] = myResult.split(Pattern.quote("|"));
             if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){
-                new fetchData(QRActivity.this).execute("","");
+                new fetchData(QRActivity.this).execute(apiServer+"exist?id="+splited[1],"");
 
             }
             else{
