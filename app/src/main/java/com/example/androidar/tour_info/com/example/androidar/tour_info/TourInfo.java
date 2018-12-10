@@ -1,6 +1,12 @@
 package com.example.androidar.tour_info;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.androidar.MapsActivity;
+import com.example.androidar.QRActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -17,8 +23,9 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class TourInfo implements TaskCompleted{
+public class TourInfo implements TaskCompleted, Parcelable {
     private MapsActivity mapsContext;
+    private QRActivity qrContext;
     private final String apiKey = "AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4";
     private final String apiServer = "http://www.garttox.jedovarnik.cz/api/";
     private String origin = "";
@@ -29,12 +36,36 @@ public class TourInfo implements TaskCompleted{
     private String id;
     private Point[] points;
 
-    public TourInfo(MapsActivity mapsContext, String id) {
-        this.mapsContext=mapsContext;
+    public TourInfo(QRActivity qrContext, String id) {
+        this.qrContext=qrContext;
         this.id=id;
         new fetchData(TourInfo.this).execute(apiServer+"tour?id="+id,"tour");
     }
 
+    protected TourInfo(Parcel in) {
+        origin = in.readString();
+        destination = in.readString();
+        waypoints = in.createStringArray();
+        author = in.readString();
+        name = in.readString();
+        id = in.readString();
+    }
+
+    public static final Creator<TourInfo> CREATOR = new Creator<TourInfo>() {
+        @Override
+        public TourInfo createFromParcel(Parcel in) {
+            return new TourInfo(in);
+        }
+
+        @Override
+        public TourInfo[] newArray(int size) {
+            return new TourInfo[size];
+        }
+    };
+
+    public void setMapsContext(MapsActivity mapsContext){
+        this.mapsContext=mapsContext;
+    }
 
     public GeoApiContext getGeoContext() {
         GeoApiContext geoApiContext = new GeoApiContext();
@@ -119,7 +150,8 @@ public class TourInfo implements TaskCompleted{
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
-                this.mapsContext.startMap();
+                //this.mapsContext.startMap();
+                //this.qrContext.openMaps();
                 break;
             case "pointDetail":
                 try{
@@ -144,5 +176,22 @@ public class TourInfo implements TaskCompleted{
                 dataParsed = dataParsed + singleParsed + "\n";
             }*/
 
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(apiKey);
+        dest.writeString(apiServer);
+        dest.writeString(origin);
+        dest.writeString(destination);
+        dest.writeStringArray(waypoints);
+        dest.writeString(author);
+        dest.writeString(name);
+        dest.writeString(id);
     }
 }

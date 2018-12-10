@@ -32,7 +32,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         String tourID= getIntent().getExtras().getString("QRresult");
-        tourInfo = new TourInfo(MapsActivity.this, tourID);
+        //tourInfo = new TourInfo(MapsActivity.this, tourID);
+        tourInfo=getIntent().getParcelableExtra("tour");
         TourText = (TextView) findViewById(R.id.textView4);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -47,9 +48,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-    }
-
-    public void startMap(){
         now = new DateTime();
         try {
             if(tourInfo.getWaypoints() == null){

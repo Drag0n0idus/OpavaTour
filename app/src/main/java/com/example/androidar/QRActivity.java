@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.androidar.tour_info.TaskCompleted;
+import com.example.androidar.tour_info.TourInfo;
 import com.example.androidar.tour_info.fetchData;
 import com.google.zxing.Result;
 
@@ -36,6 +38,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
     private ZXingScannerView scannerView;
     private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
     private String myResult;
+    private TourInfo tour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,8 +144,8 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         if(myResult.contains("|")){
             final String splited[] = myResult.split(Pattern.quote("|"));
             if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){
-                new fetchData(QRActivity.this).execute(apiServer+"exist?id="+splited[1],"");
-
+                this.myResult=splited[1];
+                new fetchData(QRActivity.this).execute(apiServer+"exist?id="+this.myResult,this.myResult);
             }
             else{
                 builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
@@ -152,6 +155,8 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                     }
                 });
                 builder.setMessage("QR kód má špatný formát");
+                AlertDialog alert1 = builder.create();
+                alert1.show();
             }
         }
         else {
@@ -162,12 +167,13 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                 }
             });
             builder.setMessage("QR kód neobsahuje stezku");
+            AlertDialog alert1 = builder.create();
+            alert1.show();
         }
-        AlertDialog alert1 = builder.create();
-        alert1.show();
+
     }
 
-    public void verified(String name){
+    public void verified(String name, final String myResult){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
@@ -179,17 +185,20 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         builder.setNeutralButton("Ano", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                openMaps(myResult);
+                tour= new TourInfo(QRActivity.this,myResult);
+                //openMaps(myResult);
             }
         });
         builder.setMessage("Přejete si spustit stezku: "+ name);
+        AlertDialog alert1 = builder.create();
+        alert1.show();
     }
 
     //Spuštění Map
-    public void openMaps(String result) {
+    public void openMaps() {
         Intent intent = new Intent(this, MapsActivity.class);
-        intent.putExtra("QRresult",result);
+        intent.putExtra("QRresult",myResult);
+        intent.putExtra("tour",tour);
         startActivity(intent);
     }
 
@@ -200,7 +209,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
             JObject = new JSONObject(result);
             String status=(String)JObject.get("status");
             if(status.equals("avaible")){
-                this.verified((String)JObject.get("title"));
+                this.verified((String)JObject.get("tour"),myResult);
             }
             else{
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -212,7 +221,10 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                     }
                 });
                 builder.setMessage("Tahle stezka buď již nefunguje nebo neexistuje");
+                AlertDialog alert1 = builder.create();
+                alert1.show();
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
