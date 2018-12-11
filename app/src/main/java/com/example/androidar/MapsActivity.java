@@ -33,7 +33,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         String tourID= getIntent().getExtras().getString("QRresult");
         //tourInfo = new TourInfo(MapsActivity.this, tourID);
-        tourInfo=getIntent().getParcelableExtra("tour");
+        tourInfo = getIntent().getParcelableExtra("tour");
         TourText = (TextView) findViewById(R.id.textView4);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);

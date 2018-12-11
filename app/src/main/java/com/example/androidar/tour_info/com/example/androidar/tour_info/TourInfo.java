@@ -125,9 +125,8 @@ public class TourInfo implements TaskCompleted, Parcelable {
             case "tour":
                 try {
                     JSONObject JObject=new JSONObject(result);
-                    this.name=(String)JObject.get("name");
+                    this.name=(String)JObject.get("tour");
                     this.author=(String)JObject.get("author");
-                    this.mapsContext.TourName(this.name);
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -136,22 +135,26 @@ public class TourInfo implements TaskCompleted, Parcelable {
 
             case "points":
                 try{
-                    JSONArray JArray = new JSONArray(result);
-                    this.points=new Point[JArray.length()];
-                    for(int i = 0;i <JArray.length();i++){
-                        JSONObject JO = (JSONObject) JArray.get(i);
+                    //result = result.replace("null", "");
+
+                    JSONObject JArray = new JSONObject(result);
+                    int len = JArray.length();
+                    this.points  = new Point[len];
+                    for(int i = 0;i < JArray.length();i++){
+                        JSONObject JO = JArray.getJSONObject(Integer.toString(i));
                         this.points[i]=new Point((String)JO.get("longitude"),(String)JO.get("latitude"),(String)JO.get("name"),(int)JO.get("order"));
                     }
-                    if(points.length > 2) {
+                    if(JArray.length() > 2) {
                         this.setWaypoints();
                     }
-                    this.setOrigin(points[0].getLongitude() + ", " + points[0].getLatitude());
-                    this.setDestination(points[1].getLongitude() + ", " + points[1].getLatitude());
+                    if(this.points[0] != null && this.points[1] != null) {
+                        this.setOrigin(this.points[0].getLongitude() + ", " + this.points[0].getLatitude());
+                        this.setDestination(this.points[1].getLongitude() + ", " + this.points[1].getLatitude());
+                    }
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //this.mapsContext.startMap();
-                //this.qrContext.openMaps();
+                this.qrContext.openMaps();
                 break;
             case "pointDetail":
                 try{
