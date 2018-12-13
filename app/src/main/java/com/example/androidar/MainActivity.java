@@ -2,6 +2,7 @@ package com.example.androidar;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -33,9 +34,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //Spuštění How To
     public void openHow(View view) {
-        Intent intent = new Intent(this, HowActivity.class);
-        startActivity(intent);
+        Intent browserIntent = new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("http://garttox.jedovarnik.cz/homepage/how-it-works"));
+        startActivity(browserIntent);
     }
 }

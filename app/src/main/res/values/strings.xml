@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Stezky Opavou</string>
+    <string name="app_name">Opava Tourist</string>
     <string name="edit_message">Enter the message</string>
     <string name="button_send">Send</string>
 
@@ -15,5 +15,5 @@
     <string name="info_message">Tato aplikace vyžaduje připojení k internetu.</string>
     <string name="button_how">Jak to funguje?</string>
     <string name="button_maps">Maps</string>
-    <string name="button_qr">QR Scanner</string>
+    <string name="button_qr">START</string>
 </resources>
