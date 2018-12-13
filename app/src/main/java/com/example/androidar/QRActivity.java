@@ -38,7 +38,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
     private ZXingScannerView scannerView;
     private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
     private String myResult;
-    private TourInfo tour;
+    private String tourName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +145,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
             final String splited[] = myResult.split(Pattern.quote("|"));
             if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){
                 this.myResult=splited[1];
-                new fetchData(QRActivity.this).execute(apiServer+"exist?id="+this.myResult,this.myResult);
+                new fetchData(QRActivity.this).execute(apiServer+"exist?id="+this.myResult,"exist");
             }
             else{
                 builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
@@ -185,7 +185,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         builder.setNeutralButton("Ano", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                tour= new TourInfo(QRActivity.this,myResult);
+                new fetchData(QRActivity.this).execute(apiServer+"points?id="+myResult,"OpenMaps");
                 //openMaps(myResult);
             }
         });
@@ -194,40 +194,47 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         alert1.show();
     }
 
-    //Spuštění Map
-    public void openMaps() {
+    public void openMaps(String tourFetch) {
         Intent intent = new Intent(this, MapsActivity.class);
         intent.putExtra("QRresult",myResult);
-        intent.putExtra("tour",tour);
+        intent.putExtra("pointsFetch",tourFetch);
+        intent.putExtra("tourName",this.tourName);
         startActivity(intent);
     }
 
     @Override
     public void onTaskComplete(String result, String identifier){
-        JSONObject JObject= null;
-        try {
-            JObject = new JSONObject(result);
-            String status=(String)JObject.get("status");
-            if(status.equals("avaible")){
-                this.verified((String)JObject.get("tour"),myResult);
-            }
-            else{
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        switch(identifier) {
+            case "exist":
+                JSONObject JObject = null;
+                try {
+                    JObject = new JSONObject(result);
+                    String status = (String) JObject.get("status");
+                    if (status.equals("avaible")) {
+                        this.tourName=(String) JObject.get("tour");
+                        this.verified((String) JObject.get("tour"), myResult);
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-                builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        scannerView.resumeCameraPreview(QRActivity.this);
+                        builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                scannerView.resumeCameraPreview(QRActivity.this);
+                            }
+                        });
+                        builder.setMessage("Tahle stezka buď již nefunguje nebo neexistuje");
+                        AlertDialog alert1 = builder.create();
+                        alert1.show();
                     }
-                });
-                builder.setMessage("Tahle stezka buď již nefunguje nebo neexistuje");
-                AlertDialog alert1 = builder.create();
-                alert1.show();
-            }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "OpenMaps":
+                openMaps(result);
+                break;
+
         }
-
     }
 }

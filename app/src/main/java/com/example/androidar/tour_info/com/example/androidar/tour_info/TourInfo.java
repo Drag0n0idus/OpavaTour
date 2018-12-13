@@ -42,6 +42,29 @@ public class TourInfo implements TaskCompleted, Parcelable {
         new fetchData(TourInfo.this).execute(apiServer+"tour?id="+id,"tour");
     }
 
+    public TourInfo(String id, String name, String pointsResult){
+        this.id=id;
+        this.name=name;
+        try{
+            JSONObject JArray = new JSONObject(pointsResult);
+            int len = JArray.length();
+            this.points  = new Point[len];
+            for(int i = 0;i < JArray.length();i++){
+                JSONObject JO = JArray.getJSONObject(Integer.toString(i));
+                this.points[i]=new Point((String)JO.get("longitude"),(String)JO.get("latitude"),(String)JO.get("name"),(int)JO.get("order"));
+            }
+            if(JArray.length() > 2) {
+                this.setWaypoints();
+            }
+            if(this.points[0] != null && this.points[1] != null) {
+                this.setOrigin(this.points[0].getLongitude() + ", " + this.points[0].getLatitude());
+                this.setDestination(this.points[1].getLongitude() + ", " + this.points[1].getLatitude());
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected TourInfo(Parcel in) {
         origin = in.readString();
         destination = in.readString();
@@ -154,7 +177,7 @@ public class TourInfo implements TaskCompleted, Parcelable {
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }
-                this.qrContext.openMaps();
+                //this.qrContext.openMaps();
                 break;
             case "pointDetail":
                 try{
