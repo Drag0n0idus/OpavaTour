@@ -1,9 +1,17 @@
 package com.example.androidar;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.androidar.tour_info.TourInfo;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,14 +39,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        String tourID= getIntent().getExtras().getString("QRresult");
+        String tourID = getIntent().getExtras().getString("QRresult");
         String pointsFetch = getIntent().getExtras().getString("pointsFetch");
         String tourName = getIntent().getExtras().getString("tourName");
-        tourInfo = new TourInfo(tourID,tourName,pointsFetch);
+        tourInfo = new TourInfo(tourID, tourName, pointsFetch);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
+                    .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
     /**
      * Funkce onMapReady vytvoří instanci třídy TourInfo, která obsahuje informace a metody
      * potřebné k vytvoření trasy, kterou poté vytvoří a vykreslí.
@@ -50,7 +59,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         now = new DateTime();
         try {
-            if(tourInfo.getWaypoints() == null){
+            if (tourInfo.getWaypoints() == null) {
                 result = DirectionsApi.newRequest(tourInfo.getGeoContext())
                         .mode(TravelMode.WALKING).origin(tourInfo.getOrigin()).destination(tourInfo.getDestination()).departureTime(now).await();
             } else {
@@ -65,6 +74,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+        mMap.setMyLocationEnabled(true);
+
         tourInfo.addMarkersToMap(result, mMap);
         tourInfo.addPolyline(result, mMap);
     }
@@ -74,6 +89,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.TourText.setBackgroundColor(Color.BLUE);
         this.TourText.setText(name);
     }
+
+
     /*Spuštění navigace
     public void launchNavigation(View view){
         //Vytvoření url požadavku pro navigaci

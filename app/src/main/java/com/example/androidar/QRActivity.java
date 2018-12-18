@@ -1,5 +1,6 @@
 package com.example.androidar;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -195,11 +196,17 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
     }
 
     public void openMaps(String tourFetch) {
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.putExtra("QRresult",myResult);
-        intent.putExtra("pointsFetch",tourFetch);
-        intent.putExtra("tourName",this.tourName);
-        startActivity(intent);
+        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.putExtra("QRresult", myResult);
+            intent.putExtra("pointsFetch", tourFetch);
+            intent.putExtra("tourName", this.tourName);
+            startActivity(intent);
+        }
+        else{
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            openMaps(tourFetch);
+        }
     }
 
     @Override
