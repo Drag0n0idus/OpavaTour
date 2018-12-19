@@ -36,15 +36,18 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
 
     private final String apiServer = "http://www.garttox.jedovarnik.cz/api/";
     private static final int REQUEST_CAMERA = 1;
+    private static final int REQUEST_LOCATION = 2;
     private ZXingScannerView scannerView;
     private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
     private String myResult;
     private String tourName;
+    private String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr);
+        this.result="null";
         scannerView = new ZXingScannerView(this);
         setContentView(scannerView);
         int currentApiVersion = Build.VERSION.SDK_INT;
@@ -108,14 +111,14 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                     }else {
                         Toast.makeText(getApplicationContext(), "Permission Denied, You cannot access and camera", Toast.LENGTH_LONG).show();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (shouldShowRequestPermissionRationale(CAMERA)) {
+                            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                                 showMessageOKCancel("You need to allow access to both the permissions",
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                    requestPermissions(new String[]{CAMERA},
-                                                            REQUEST_CAMERA);
+                                                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                                            REQUEST_LOCATION);
                                                 }
                                             }
                                         });
@@ -124,6 +127,20 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                         }
                     }
                 }
+                break;
+
+            case REQUEST_LOCATION:
+                if (grantResults.length > 0) {
+
+                    boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (locationAccepted){
+                        Toast.makeText(getApplicationContext(), "Permission Granted, Now you can access maps", Toast.LENGTH_LONG).show();
+                        openMaps();
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Permission Denied, You cannot access maps", Toast.LENGTH_LONG).show();
+                        scannerView.resumeCameraPreview(QRActivity.this);
+                        }
+                    }
                 break;
         }
     }
@@ -195,17 +212,17 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         alert1.show();
     }
 
-    public void openMaps(String tourFetch) {
-        if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            Intent intent = new Intent(this, MapsActivity.class);
-            intent.putExtra("QRresult", myResult);
-            intent.putExtra("pointsFetch", tourFetch);
-            intent.putExtra("tourName", this.tourName);
-            startActivity(intent);
-        }
-        else{
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            openMaps(tourFetch);
+    public void openMaps() {
+        if(!this.result.equals("null")) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, MapsActivity.class);
+                intent.putExtra("QRresult", myResult);
+                intent.putExtra("pointsFetch", this.result);
+                intent.putExtra("tourName", this.tourName);
+                startActivity(intent);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            }
         }
     }
 
@@ -239,7 +256,8 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                 }
                 break;
             case "OpenMaps":
-                openMaps(result);
+                this.result=result;
+                openMaps();
                 break;
 
         }
