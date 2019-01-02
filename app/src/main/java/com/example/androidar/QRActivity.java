@@ -5,29 +5,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
-
 import com.example.androidar.tour_info.TaskCompleted;
-import com.example.androidar.tour_info.TourInfo;
 import com.example.androidar.tour_info.fetchData;
 import com.google.zxing.Result;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.annotation.Target;
 import java.util.regex.Pattern;
-
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.Manifest.permission.CAMERA;
@@ -154,18 +144,21 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
                 .show();
     }
 
+    /**
+     * @param result je výsledek skenování QR kódu
+     */
     @Override
     public void handleResult(Result result) {
-        myResult = result.getText();
+        myResult = result.getText(); //do proměnné
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if(myResult.contains("|")){
-            final String splited[] = myResult.split(Pattern.quote("|"));
-            if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){
+        if(myResult.contains("|")){  // kontrola zda myResult obsahuje "|"
+            final String splited[] = myResult.split(Pattern.quote("|")); // Rozdělení Stringu podle |
+            if(splited[0].equals("OpavaTour") && splited[1].matches("[0-9]+")){ // kontrola zda String splňuje pattern OpavaTour|ID
                 this.myResult=splited[1];
-                new fetchData(QRActivity.this).execute(apiServer+"exist?id="+this.myResult,"exist");
+                new fetchData(QRActivity.this).execute(apiServer+"exist?id="+this.myResult,"exist"); // dotaz na api server, vysledkem je zda ID je platné
             }
             else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -178,6 +171,7 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
             }
         }
         else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setPositiveButton("Zpět", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -204,7 +198,6 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 new fetchData(QRActivity.this).execute(apiServer+"points?id="+myResult,"OpenMaps");
-                //openMaps(myResult);
             }
         });
         builder.setMessage("Přejete si spustit stezku: "+ name);
@@ -212,15 +205,21 @@ public class QRActivity extends AppCompatActivity implements ZXingScannerView.Re
         alert1.show();
     }
 
+    // metoda pro spouštění MapsActivity po ověření povolení
     public void openMaps() {
+        // kontrola zda
         if(!this.result.equals("null")) {
+            // kontrola zda uživatel dal povolení k použití GPS
             if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                // spouštění MapsActivity
                 Intent intent = new Intent(this, MapsActivity.class);
+                // předávání dat do MapsActivity
                 intent.putExtra("QRresult", myResult);
                 intent.putExtra("pointsFetch", this.result);
                 intent.putExtra("tourName", this.tourName);
                 startActivity(intent);
             } else {
+                // vyžádání povolení k použití GPS
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
             }
         }

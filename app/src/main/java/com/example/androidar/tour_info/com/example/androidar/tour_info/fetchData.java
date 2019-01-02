@@ -22,13 +22,12 @@ public class fetchData extends AsyncTask<String,Void,Void> {
 
     }
 
-
+    // probíhá v pozadí aplikace,
     @Override
     protected Void doInBackground(String... params) {
         try {
-            this.identifier=params[1];
-            //URL url = new URL("http://192.168.2.130/android-project-server/www/api/tour?id=1");
-            URL url = new URL(params[0]);
+            this.identifier=params[1]; //označení druhu dotazu
+            URL url = new URL(params[0]); //url dotazu
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -43,13 +42,10 @@ public class fetchData extends AsyncTask<String,Void,Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /*data="{\"tour\":\"TEST-tour\",\"author\":\"Admin\"}";
-        identifier="tour";*/
         return null;
     }
 
-
+    // proběhne po ukončení výpočtů v pozadí (doInBackground)
     @Override
     protected void onPostExecute(Void eVoid) {
         super.onPostExecute(eVoid);
