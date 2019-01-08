@@ -294,7 +294,7 @@ public class MapsActivity extends AppCompatActivity
                 geoFenceMarker.remove();
 
             geoFenceMarker = map.addMarker(markerOptions);
-
+            startGeofence();
         }
     }
 
