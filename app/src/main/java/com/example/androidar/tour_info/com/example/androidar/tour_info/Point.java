@@ -7,15 +7,17 @@ public class Point {
     private String latitude;
     private String name;
     private int order;
+    private int id;
 
     private String text;
     private URL[] foto;
 
-    public Point(String longitude, String latitude, String name, int order) {
+    public Point(String longitude, String latitude, String name, int order, int id) {
         this.longitude=longitude;
         this.latitude=latitude;
         this.name=name;
         this.order=order;
+        this.id=id;
     }
 
     public String getLongitude() {

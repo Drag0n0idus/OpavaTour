@@ -28,6 +28,7 @@ public class TourInfo implements TaskCompleted, Parcelable {
     private QRActivity qrContext;
     private final String apiKey = "AIzaSyCF241i93KMq6y-tHtrQoVhGtGweauHSk4";
     private final String apiServer = "http://www.garttox.jedovarnik.cz/api/";
+    private final String webServer = "http://www.garttox.jedovarnik.cz/";
     private String origin = "";
     private String destination = "";
     private String[] waypoints = null;
@@ -35,6 +36,9 @@ public class TourInfo implements TaskCompleted, Parcelable {
     public String name = "";
     private String id;
     private Point[] points;
+    public String currentPointText;
+    public String currentPointTitle;
+    public String currentPointImg;
 
     public TourInfo(QRActivity qrContext, String id) {
         this.qrContext=qrContext;
@@ -51,7 +55,7 @@ public class TourInfo implements TaskCompleted, Parcelable {
             this.points  = new Point[len];
             for(int i = 0;i < JArray.length();i++){
                 JSONObject JO = JArray.getJSONObject(Integer.toString(i));
-                this.points[i]=new Point((String)JO.get("longitude"),(String)JO.get("latitude"),(String)JO.get("name"),(int)JO.get("order"));
+                this.points[i]=new Point((String)JO.get("longitude"),(String)JO.get("latitude"),(String)JO.get("name"),(int)JO.get("order"),(int)JO.get("id"));
             }
             if(JArray.length() > 2) {
                 this.setWaypoints();
@@ -165,7 +169,7 @@ public class TourInfo implements TaskCompleted, Parcelable {
                     this.points  = new Point[len];
                     for(int i = 0;i < JArray.length();i++){
                         JSONObject JO = JArray.getJSONObject(Integer.toString(i));
-                        this.points[i]=new Point((String)JO.get("longitude"),(String)JO.get("latitude"),(String)JO.get("name"),(int)JO.get("order"));
+                        this.points[i]=new Point((String)JO.get("longitude"),(String)JO.get("latitude"),(String)JO.get("name"),(int)JO.get("order"),(int)JO.get("id"));
                     }
                     if(JArray.length() > 2) {
                         this.setWaypoints();
@@ -182,9 +186,10 @@ public class TourInfo implements TaskCompleted, Parcelable {
             case "pointDetail":
                 try{
                     JSONObject JObject=new JSONObject(result);
-                    int order=Integer.parseInt((String)JObject.get("order"));
-                    this.points[order-1].setText((String)JObject.get("text"));
-
+                    this.currentPointText=(String)JObject.get("text");
+                    this.currentPointTitle=(String)JObject.get("title");
+                    this.currentPointImg=this.webServer+(String)JObject.get("foto");
+                    this.mapsContext.detailReady();
                 }catch (JSONException e) {
                     e.printStackTrace();
                 }

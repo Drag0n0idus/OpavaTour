@@ -1,6 +1,9 @@
 package com.example.androidar.tour_info;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.widget.ImageView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,11 +18,16 @@ public class fetchData extends AsyncTask<String,Void,Void> {
     String data = "";
     String identifier = "";
     private TaskCompleted mCallback;
+    ImageView imageView;
+    Bitmap imgResult;
 
 
     public fetchData(TaskCompleted context){
         this.mCallback = context;
+    }
 
+    public fetchData(ImageView imageView){
+        this.imageView = imageView;
     }
 
     // probíhá v pozadí aplikace,
@@ -28,17 +36,22 @@ public class fetchData extends AsyncTask<String,Void,Void> {
         try {
             this.identifier=params[1]; //označení druhu dotazu
             URL url = new URL(params[0]); //url dotazu
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = httpURLConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-            String line = "";
-            while(line != null){
-                line = bufferedReader.readLine();
-                this.data = this.data + line;
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.connect();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            if(this.identifier.equals("img")){
+                imgResult=BitmapFactory.decodeStream(inputStream);
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            else {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line = "";
+                while (line != null) {
+                    line = bufferedReader.readLine();
+                    this.data = this.data + line;
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,6 +62,11 @@ public class fetchData extends AsyncTask<String,Void,Void> {
     @Override
     protected void onPostExecute(Void eVoid) {
         super.onPostExecute(eVoid);
-        mCallback.onTaskComplete(this.data,this.identifier);
+        if(this.identifier.equals("img")){
+            imageView.setImageBitmap(imgResult);
+        }
+        else {
+            mCallback.onTaskComplete(this.data, this.identifier);
+        }
     }
 }

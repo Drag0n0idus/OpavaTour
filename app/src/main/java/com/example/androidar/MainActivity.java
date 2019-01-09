@@ -22,15 +22,15 @@ public class MainActivity extends AppCompatActivity {
         logo.setImageResource(R.drawable.logored);
     }
 
-    //Spuštění Map
-    public void openMaps(View view) {
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
-    }
 
     //Spuštění QR
     public void openQR(View view) {
         Intent intent = new Intent(this, QRActivity.class);
+        startActivity(intent);
+    }
+
+    public void openInfo(View view) {
+        Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
     }
 
