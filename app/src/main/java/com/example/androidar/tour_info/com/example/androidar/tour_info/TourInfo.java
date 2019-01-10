@@ -111,6 +111,9 @@ public class TourInfo implements TaskCompleted, Parcelable {
             marker[i+1] = mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[i].endLocation.lat,
                     results.routes[0].legs[i].endLocation.lng)).title(results.routes[0].legs[i].endAddress));
         }
+
+        pointsBubbleSort();
+
         mMap.setMinZoomPreference(15.0f);
         mMap.setMaxZoomPreference(18.0f);
     }
@@ -118,6 +121,16 @@ public class TourInfo implements TaskCompleted, Parcelable {
     public void addPolyline(DirectionsResult results, GoogleMap mMap) {
         List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
         mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+    }
+
+    public void pointsBubbleSort() {
+        Point[] help = new Point[this.points.length];
+        help[0] = points[0];
+        help[this.points.length - 1] = points[1];
+        for(int i = this.points.length - 1; i > 1; i--) {
+            help[i - 1] = points[i];
+        }
+        points = help;
     }
 
     public String getOrigin() {

@@ -2,6 +2,7 @@ package com.example.androidar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +52,7 @@ import static android.location.Location.distanceBetween;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+    private String TourName;
     private TextView TourText;
     private TextView TourLat;
     private TextView TourLong;
@@ -77,8 +80,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         createGoogleApi();
         String tourID = getIntent().getExtras().getString("QRresult");
         String pointsFetch = getIntent().getExtras().getString("pointsFetch");
-        String tourName = getIntent().getExtras().getString("tourName");
-        tourInfo = new TourInfo(tourID, tourName, pointsFetch);
+        TourName = getIntent().getExtras().getString("tourName");
+        tourInfo = new TourInfo(tourID, TourName, pointsFetch);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -117,6 +120,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         tourInfo.addMarkersToMap(result, mMap);
         visited = new Boolean[tourInfo.getMarkers().length];
+        for(int i = 0; i < visited.length; i++){
+            visited[i] = false;
+        }
         tourInfo.addPolyline(result, mMap);
     }
 
@@ -260,7 +266,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void markerVisited() {
-        visited[tourInfo.getPoints()[pointVisited].getOrder() - 1] = true;
+        visited[pointVisited] = true;
+        tourInfo.getMarkers()[pointVisited].setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        if(finishedTour()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setNegativeButton("Ukončit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finished();
+                }
+            });
+            builder.setMessage("Dokončili jste stezku " + TourName + "!");
+            AlertDialog alert1 = builder.create();
+            alert1.show();
+        }
+    }
+
+    public boolean finishedTour() {
+        for(int i = 0; i < visited.length; i++){
+            if(visited[i] == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void finished() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void detailReady(){

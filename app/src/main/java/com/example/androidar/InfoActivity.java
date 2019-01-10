@@ -27,4 +27,8 @@ public class InfoActivity extends AppCompatActivity {
         new fetchData(image).execute(getIntent().getExtras().getString("Img"),"img");
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

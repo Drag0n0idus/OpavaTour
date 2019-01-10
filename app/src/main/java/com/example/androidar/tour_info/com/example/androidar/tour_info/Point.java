@@ -51,4 +51,8 @@ public class Point {
     public void setFoto(URL[] foto) {
         this.foto = foto;
     }
+
+    public int getId() {
+        return id;
+    }
 }
