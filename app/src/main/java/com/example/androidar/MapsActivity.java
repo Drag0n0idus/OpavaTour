@@ -21,12 +21,19 @@ import com.example.androidar.tour_info.Point;
 import com.example.androidar.tour_info.TourInfo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
@@ -34,6 +41,7 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.TravelMode;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -45,12 +53,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView TourText;
     private TextView TourLat;
     private TextView TourLong;
+    private TextView TourPoint;
     private GoogleMap mMap;
     private TourInfo tourInfo;
     private DirectionsResult result;
     private DateTime now;
     private Button btn;
     private Location lastLocation;
+    private Boolean[] visited;
+    private int pointVisited;
     private GoogleApiClient googleApiClient;
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -58,7 +69,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        Button btn = (Button) findViewById(R.id.button);
+        btn = (Button) findViewById(R.id.infoButton);
         TourText = (TextView) findViewById(R.id.textView4);
         TourLat = (TextView) findViewById(R.id.textLat);
         TourLong = (TextView) findViewById(R.id.textLong);
@@ -104,8 +115,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
         }
         mMap.setMyLocationEnabled(true);
-
         tourInfo.addMarkersToMap(result, mMap);
+        visited = new Boolean[tourInfo.getMarkers().length];
         tourInfo.addPolyline(result, mMap);
     }
 
@@ -177,8 +188,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     // Defined in mili seconds.
     // This number in extremely low, and should be used only for debug
-    private final int UPDATE_INTERVAL =  1000;
-    private final int FASTEST_INTERVAL = 900;
+    private final int UPDATE_INTERVAL =  100;
+    private final int FASTEST_INTERVAL = 90;
 
     // Start location Updates
     @SuppressLint("MissingPermission")
@@ -197,16 +208,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "onLocationChanged ["+location+"]");
         lastLocation = location;
         writeActualLocation(location);
-        //isInDistance(location)
+        if(isInDistance(location)) {
+            detailReady();
+        }
     }
 
     private boolean isInDistance(Location location) {
-        Point point;
-        for(tourInfo.getPoints() : point) {
-
+        Location endLoc = new Location("");
+        Location startLoc = new Location("");
+        startLoc.setLatitude(location.getLatitude());
+        startLoc.setLongitude(location.getLongitude());
+        for(int i = 0; i < tourInfo.getPoints().length; i++) {
+            endLoc.setLatitude((double) Double.parseDouble(tourInfo.getPoints()[i].getLatitude()));
+            endLoc.setLongitude((double) Double.parseDouble(tourInfo.getPoints()[i].getLongitude()));
+            if(Math.ceil(startLoc.distanceTo(endLoc)) <= 50) {
+                btn.setText("Zajímavosti o " + tourInfo.getPoints()[i].getName());
+                pointVisited = i;
+                return true;
+            }
         }
-
-        distanceBetween(location.getLatitude(), location.getLongitude());
+        return false;
     }
 
     // Write location coordinates on UI
@@ -217,6 +238,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void writeLastLocation() {
         writeActualLocation(lastLocation);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())));
     }
 
     public void TourName(String name){
@@ -225,11 +247,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void openInfo(View view) {
-        Intent intent = new Intent(this, InfoActivity.class);
+        markerVisited();
+        /*Intent intent = new Intent(this, InfoActivity.class);
         intent.putExtra("Text", this.tourInfo.currentPointText);
         intent.putExtra("Title", this.tourInfo.currentPointTitle);
         intent.putExtra("Img", this.tourInfo.currentPointImg);
-        startActivity(intent);
+        startActivity(intent);*/
+    }
+
+    public void markerVisited() {
+        visited[tourInfo.getPoints()[pointVisited].getOrder() - 1] = true;
     }
 
     public void detailReady(){

@@ -10,6 +10,7 @@ import com.example.androidar.QRActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.GeoApiContext;
@@ -36,8 +37,9 @@ public class TourInfo implements TaskCompleted, Parcelable {
     public String name = "";
     private String id;
     private Point[] points;
-    public String currentPointText;
-    public String currentPointTitle;
+    private Marker[] marker = null;
+    public String currentPointText = "HAHAHAHAHAHAHAHAHAHAHAHHAA";
+    public String currentPointTitle = "TESTING BITCH";
     public String currentPointImg;
 
     public TourInfo(QRActivity qrContext, String id) {
@@ -102,14 +104,13 @@ public class TourInfo implements TaskCompleted, Parcelable {
     }
 
     public void addMarkersToMap(DirectionsResult results, GoogleMap mMap) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
+        marker = new Marker[points.length];
+        marker[0] = mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[0].startLocation.lat,
                 results.routes[0].legs[0].startLocation.lng)).title(results.routes[0].legs[0].startAddress));
         for(int i = 0; i < (points.length - 1); i++) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[i].endLocation.lat,
+            marker[i+1] = mMap.addMarker(new MarkerOptions().position(new LatLng(results.routes[0].legs[i].endLocation.lat,
                     results.routes[0].legs[i].endLocation.lng)).title(results.routes[0].legs[i].endAddress));
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(results.routes[0].legs[0].startLocation.lat,
-                results.routes[0].legs[0].startLocation.lng)));
         mMap.setMinZoomPreference(15.0f);
         mMap.setMaxZoomPreference(18.0f);
     }
@@ -148,6 +149,10 @@ public class TourInfo implements TaskCompleted, Parcelable {
 
     public Point[] getPoints() {
         return this.points;
+    }
+
+    public Marker[] getMarkers() {
+        return this.marker;
     }
 
     @Override
