@@ -211,6 +211,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(isInDistance(location)) {
             detailReady();
         }
+        else {
+            btn.setVisibility(View.INVISIBLE);
+        }
     }
 
     private boolean isInDistance(Location location) {
@@ -227,6 +230,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         }
+
         return false;
     }
 
