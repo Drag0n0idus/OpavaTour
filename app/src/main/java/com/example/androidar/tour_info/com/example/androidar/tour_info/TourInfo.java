@@ -61,8 +61,8 @@ public class TourInfo implements TaskCompleted, Parcelable {
                 this.setWaypoints();
             }
             if(this.points[0] != null && this.points[1] != null) {
-                this.setOrigin(this.points[0].getLongitude() + ", " + this.points[0].getLatitude());
-                this.setDestination(this.points[1].getLongitude() + ", " + this.points[1].getLatitude());
+                this.setOrigin(this.points[0].getLatitude() + ", " + this.points[0].getLongitude());
+                this.setDestination(this.points[1].getLatitude() + ", " + this.points[1].getLongitude());
             }
         }catch (JSONException e) {
             e.printStackTrace();
@@ -142,8 +142,12 @@ public class TourInfo implements TaskCompleted, Parcelable {
     public void setWaypoints() {
         this.waypoints = new String[this.points.length-2];
         for(int i = 2; i < this.points.length; i++){
-            this.waypoints[i-2] = this.points[i].getLongitude() + ", " + this.points[i].getLatitude();
+            this.waypoints[i-2] = this.points[i].getLatitude() + ", " + this.points[i].getLongitude();
         }
+    }
+
+    public Point[] getPoints() {
+        return this.points;
     }
 
     @Override
