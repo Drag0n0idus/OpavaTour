@@ -48,7 +48,8 @@ public class TourInfo implements TaskCompleted, Parcelable {
         new fetchData(TourInfo.this).execute(apiServer+"tour?id="+id,"tour");
     }
 
-    public TourInfo(String id, String name, String pointsResult){
+    public TourInfo(String id, String name, String pointsResult, MapsActivity mapsContext){
+        this.mapsContext = mapsContext;
         this.id=id;
         this.name=name;
         try{
@@ -166,6 +167,14 @@ public class TourInfo implements TaskCompleted, Parcelable {
 
     public Marker[] getMarkers() {
         return this.marker;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void readDetail(int id){
+        new fetchData(TourInfo.this).execute(this.apiServer+"pointdetail?id="+id,"pointDetail");
     }
 
     @Override

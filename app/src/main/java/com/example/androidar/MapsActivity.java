@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.androidar.tour_info.Point;
 import com.example.androidar.tour_info.TourInfo;
+import com.example.androidar.tour_info.fetchData;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -81,7 +82,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String tourID = getIntent().getExtras().getString("QRresult");
         String pointsFetch = getIntent().getExtras().getString("pointsFetch");
         TourName = getIntent().getExtras().getString("tourName");
-        tourInfo = new TourInfo(tourID, TourName, pointsFetch);
+        tourInfo = new TourInfo(tourID, TourName, pointsFetch,MapsActivity.this);
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -214,15 +215,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "onLocationChanged ["+location+"]");
         lastLocation = location;
         writeActualLocation(location);
-        if(isInDistance(location)) {
-            detailReady();
+        int id=isInDistance(location);
+        if(id>=0) {
+            this.tourInfo.readDetail(id);
         }
         else {
             btn.setVisibility(View.INVISIBLE);
         }
     }
 
-    private boolean isInDistance(Location location) {
+    private int isInDistance(Location location) {
         Location endLoc = new Location("");
         Location startLoc = new Location("");
         startLoc.setLatitude(location.getLatitude());
@@ -233,11 +235,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(Math.ceil(startLoc.distanceTo(endLoc)) <= 50) {
                 btn.setText("Zajímavosti o " + tourInfo.getPoints()[i].getName());
                 pointVisited = i;
-                return true;
+                return tourInfo.getPoints()[i].getId();
             }
         }
 
-        return false;
+        return -1;
     }
 
     // Write location coordinates on UI
@@ -258,11 +260,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void openInfo(View view) {
         markerVisited();
-        /*Intent intent = new Intent(this, InfoActivity.class);
+        Intent intent = new Intent(this, InfoActivity.class);
         intent.putExtra("Text", this.tourInfo.currentPointText);
         intent.putExtra("Title", this.tourInfo.currentPointTitle);
         intent.putExtra("Img", this.tourInfo.currentPointImg);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     public void markerVisited() {
